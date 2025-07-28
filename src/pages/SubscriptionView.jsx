@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useSubscriptions } from "../context/SubscriptionsProvider";
 import EditSubscriptionModal from "../components/EditSubscriptionModal";
 
-// Extend dayjs with relativeTime plugin
 dayjs.extend(relativeTime);
 
 export default function SubscriptionView() {
@@ -32,7 +31,6 @@ export default function SubscriptionView() {
 
   const handleEditClose = () => {
     setIsEditModalOpen(false);
-    // Refresh subscription data after edit
     if (isLoaded) {
       const found = subscriptions.find((s) => s.id === id);
       setSubscription(found);
@@ -41,7 +39,6 @@ export default function SubscriptionView() {
 
   const handlePrint = () => {
     try {
-      // Add print-specific styles before printing
       const printStyles = `
         <style>
           @media print {
@@ -67,7 +64,6 @@ export default function SubscriptionView() {
       
       window.print();
       
-      // Restore original head after printing
       setTimeout(() => {
         document.head.innerHTML = originalHead;
       }, 1000);
@@ -78,7 +74,6 @@ export default function SubscriptionView() {
 
   const handleDownloadPDF = async () => {
     try {
-      // Import html2pdf dynamically
       const html2pdf = (await import('html2pdf.js')).default;
       
       const element = document.getElementById('subscription-content');
@@ -100,38 +95,32 @@ export default function SubscriptionView() {
         }
       };
 
-      // Clone the element and modify it for PDF
       const clonedElement = element.cloneNode(true);
       
-      // Remove print-hidden elements
       const hiddenElements = clonedElement.querySelectorAll('.print\\:hidden , [class*="print:hidden"]');
       hiddenElements.forEach(el => el.remove());
       
-      // Apply print styles
       const printOnlyElements = clonedElement.querySelectorAll('.print\\:block, [class*="print:block"]');
       printOnlyElements.forEach(el => {
         el.style.display = 'block';
       });
       
-      // Fix gradient backgrounds for PDF
       const gradientElements = clonedElement.querySelectorAll('.bg-gradient-to-r');
       gradientElements.forEach(el => {
         el.style.background = 'white';
         el.style.color = 'black';
       });
       
-      // Create a temporary container
       const tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
       tempContainer.style.left = '-9999px';
       tempContainer.style.top = '0';
-      tempContainer.style.width = '210mm'; // A4 width
+      tempContainer.style.width = '210mm';
       tempContainer.appendChild(clonedElement);
       document.body.appendChild(tempContainer);
       
       await html2pdf().set(options).from(clonedElement).save();
       
-      // Cleanup
       document.body.removeChild(tempContainer);
       
       toast.success('PDF downloaded successfully!');
@@ -214,7 +203,6 @@ export default function SubscriptionView() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div id="subscription-content" className="bg-white rounded-xl shadow-lg overflow-hidden print:shadow-none print:rounded-none">
-        {/* Header */}
         <div className="bg-gradient-to-r from-teal-500 to-teal-600 text-white p-6 print:bg-white print:text-black print:border-b print:border-gray-200">
           <div className="flex items-center justify-between print:hidden">
             <button
@@ -258,9 +246,7 @@ export default function SubscriptionView() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          {/* Key Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-slate-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
@@ -301,9 +287,7 @@ export default function SubscriptionView() {
             </div>
           </div>
 
-          {/* Detailed Information */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Basic Details */}
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-2">
                 Subscription Details
@@ -339,7 +323,6 @@ export default function SubscriptionView() {
               </div>
             </div>
 
-            {/* Settings & Preferences */}
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-2">
                 Settings & Preferences
@@ -383,7 +366,6 @@ export default function SubscriptionView() {
             </div>
           </div>
 
-          {/* Description */}
           {subscription.description && (
             <div className="mt-8">
               <h2 className="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-2 mb-4">
@@ -397,7 +379,6 @@ export default function SubscriptionView() {
             </div>
           )}
 
-          {/* Actions */}
           <div className="mt-8 pt-6 border-t border-slate-200 print:hidden">
             <div className="flex flex-wrap gap-3">
               <button
@@ -424,13 +405,11 @@ export default function SubscriptionView() {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="bg-slate-50 px-6 py-4 text-center text-slate-500 text-sm print:hidden">
           <p>Generated on {dayjs().format("MMMM D, YYYY [at] h:mm A")}</p>
         </div>
       </div>
 
-      {/* Edit Modal */}
       <EditSubscriptionModal
         isOpen={isEditModalOpen}
         onClose={handleEditClose}

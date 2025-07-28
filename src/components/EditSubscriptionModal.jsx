@@ -25,13 +25,11 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
 
     const categories = ["Entertainment", "Productivity", "Education", "Finance", "Others"];
 
-    // Load subscription data when modal opens
     useEffect(() => {
         if (isOpen && subscriptionId) {
             const foundSubscription = subscriptions.find(sub => sub.id === subscriptionId);
             if (foundSubscription) {
                 setSubscription(foundSubscription);
-                // Format date for input field (YYYY-MM-DD)
                 const formattedDate = foundSubscription.renewDate 
                     ? new Date(foundSubscription.renewDate).toISOString().split('T')[0]
                     : "";
@@ -54,7 +52,6 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
         }
     }, [isOpen, subscriptionId, subscriptions, onClose]);
 
-    // Reset form when modal closes
     useEffect(() => {
         if (!isOpen) {
             setFormData(initialFormData);
@@ -72,7 +69,6 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
 
     const resetForm = () => {
         if (subscription) {
-            // Format date for input field (YYYY-MM-DD)
             const formattedDate = subscription.renewDate 
                 ? new Date(subscription.renewDate).toISOString().split('T')[0]
                 : "";
@@ -102,7 +98,6 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
         setLoading(true);
 
         try {
-            // Convert price to number
             const updatedData = {
                 ...formData,
                 price: parseFloat(formData.price)
@@ -268,7 +263,6 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
                             />
                         </div>
 
-                        {/* Optional checkboxes for reminder & recurring */}
                         <div className="flex gap-6 text-sm">
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input
@@ -294,7 +288,6 @@ export default function EditSubscriptionModal({ isOpen, onClose, subscriptionId 
                             </label>
                         </div>
 
-                        {/* Buttons */}
                         <div className="mt-6 flex justify-between items-center pt-4 border-t border-slate-200">
                             <button
                                 type="button"

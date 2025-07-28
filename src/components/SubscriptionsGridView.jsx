@@ -40,10 +40,8 @@ export default function SubscriptionGridView({
           className="group relative bg-white rounded-2xl border border-slate-200/60 p-6 hover:border-slate-300/60 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 cursor-pointer overflow-hidden"
          onClick={() => navigate(`/subscription/${sub?.id}`)}
         >
-          {/* Gradient accent */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
           
-          {/* Action Buttons */}
           <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
               onClick={(e) => handleEdit(e, sub.id)}
@@ -61,7 +59,6 @@ export default function SubscriptionGridView({
             </button>
           </div>
 
-          {/* Status Badge */}
           <div className="flex justify-between items-start mb-4">
             <span
               className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -80,7 +77,6 @@ export default function SubscriptionGridView({
             </span>
           </div>
 
-          {/* Service Name & Category */}
           <div className="mb-6">
             <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-slate-700 transition-colors">
               {sub.name}
@@ -90,7 +86,6 @@ export default function SubscriptionGridView({
             </p>
           </div>
 
-          {/* Price */}
           <div className="mb-6">
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
@@ -102,13 +97,11 @@ export default function SubscriptionGridView({
             </div>
           </div>
 
-          {/* Renewal Date */}
           <div className="flex items-center gap-2 text-sm text-slate-600 bg-slate-50 rounded-lg px-3 py-2">
             <Calendar size={14} className="text-slate-400" />
             <span className="font-medium">Renews {sub.renewDate}</span>
           </div>
 
-          {/* Hover overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"></div>
         </div>
       ))}

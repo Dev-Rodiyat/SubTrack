@@ -152,7 +152,6 @@ export default function Subscriptions() {
                     <option value="missed">Missed</option>
                 </select>
 
-                {/* Date Filter */}
                 <select
                     value={dateFilter}
                     onChange={e => setDateFilter(e.target.value)}
@@ -163,7 +162,6 @@ export default function Subscriptions() {
                     <option value="nextMonth">Next Month</option>
                 </select>
 
-                {/* Clear Filters */}
                 {(searchTerm.trim() !== "" || statusFilter !== "all" || dateFilter !== "all") && (
                     <button onClick={clearFilters} className="text-sm text-rose-500 ml-auto">
                         Clear All Filters
@@ -171,7 +169,6 @@ export default function Subscriptions() {
                 )}
             </div>
 
-            {/* View Tabs */}
             <div className="flex items-center gap-4 mb-6">
                 <button
                     onClick={() => setView("list")}
@@ -195,7 +192,6 @@ export default function Subscriptions() {
                 </button>
             </div>
 
-            {/* Views */}
             {view === "list" ? (
                 <SubscriptionListView
                     subscriptions={filtered}

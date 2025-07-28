@@ -206,7 +206,6 @@ export default function AddSubscriptionModal({ isOpen, onClose }) {
                         />
                     </div>
 
-                    {/* Optional checkboxes for reminder & recurring */}
                     <div className="flex gap-6 text-sm">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -232,7 +231,6 @@ export default function AddSubscriptionModal({ isOpen, onClose }) {
                         </label>
                     </div>
 
-                    {/* Buttons */}
                     <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-slate-200">
                         <button
                             type="button"

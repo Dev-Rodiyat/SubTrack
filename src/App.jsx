@@ -5,7 +5,6 @@ import About from './pages/About';
 import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
 import Subscriptions from './pages/Subscriptions';
-import Settings from './pages/Settings';
 import SubscriptionView from './pages/SubscriptionView';
 
 export default function App() {
@@ -18,7 +17,6 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/subscription/:id" element={<SubscriptionView />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

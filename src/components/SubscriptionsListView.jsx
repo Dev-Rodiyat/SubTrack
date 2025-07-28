@@ -51,7 +51,6 @@ export default function SubscriptionListView({ subscriptions = [], onEdit, onDel
           </div>
         </div>
 
-        {/* Table Body */}
         <div className="divide-y divide-slate-100 min-w-max">
           {subscriptions.map((sub, index) => (
             <div
@@ -120,7 +119,6 @@ export default function SubscriptionListView({ subscriptions = [], onEdit, onDel
                 </span>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center justify-center">
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <button
@@ -144,14 +142,12 @@ export default function SubscriptionListView({ subscriptions = [], onEdit, onDel
         </div>
       </div>
 
-      {/* Footer with count */}
       <div className="bg-slate-50/50 border-t border-slate-200/60 px-6 py-3">
         <div className="text-xs text-slate-500 font-medium">
           Showing {subscriptions.length} subscription{subscriptions.length !== 1 ? "s" : ""}
         </div>
       </div>
 
-      {/* Mobile scroll hint */}
       <div className="md:hidden bg-slate-100/50 px-6 py-2 text-center">
         <div className="text-xs text-slate-400 font-medium">← Swipe to see more details →</div>
       </div>

@@ -96,7 +96,6 @@ export default function Dashboard() {
         <div className="px-4 md:px-12 lg:px-24 py-6">
             <h1 className="text-2xl font-semibold text-slate-800 mb-6">Dashboard</h1>
 
-            {/* STAT CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
                 <div className="bg-teal-50 p-4 rounded-xl shadow text-center">
                     <p className="text-sm text-teal-600">Total Monthly Spend</p>
@@ -116,7 +115,6 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* UPCOMING RENEWALS */}
             <div className="bg-white p-6 rounded-xl shadow mb-8">
                 <h3 className="text-lg font-semibold mb-4 text-slate-800">Upcoming Renewals</h3>
 
@@ -154,7 +152,6 @@ export default function Dashboard() {
                 )}
             </div>
 
-            {/* CHARTS */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div className="bg-gradient-to-br from-teal-50 to-white p-6 rounded-xl shadow">
                     <h3 className="text-lg font-semibold mb-4 text-slate-800">Spending Breakdown</h3>
