@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useSubscriptions } from "../context/SubscriptionsProvider";
 import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 import {
     PieChart,
     Pie,
@@ -15,15 +16,6 @@ import {
 } from "recharts";
 
 const COLORS = ["#14b8a6", "#0f766e", "#2dd4bf", "#5eead4", "#99f6e4"];
-
-const monthlySpending = [
-    { month: "Jan", total: 45.99 },
-    { month: "Feb", total: 39.99 },
-    { month: "Mar", total: 55.0 },
-    { month: "Apr", total: 49.5 },
-    { month: "May", total: 60.25 },
-    { month: "Jun", total: 41.75 },
-];
 
 const getDaysLeft = (date) => {
     const today = new Date();
@@ -42,30 +34,73 @@ const getCountdownText = (days) => {
 const getCountdownColor = (days) => {
     if (days === 0) return "text-rose-600 font-semibold";
     if (days === 1) return "text-orange-500 font-semibold";
-    return "text-teal-600 font-medium"
+    return "text-teal-600 font-medium";
+};
+
+const getMonthlySpending = (subscriptions) => {
+    const monthlyTotals = {};
+
+    subscriptions.forEach((sub) => {
+        const date = new Date(sub.renewDate);
+        if (!isNaN(date)) {
+            const month = date.toLocaleString("en-US", { month: "short" });
+            monthlyTotals[month] = (monthlyTotals[month] || 0) + parseFloat(sub.price || 0);
+        }
+    });
+
+    // Ensure months are returned in order (Jan to Dec)
+    const monthOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return monthOrder
+        .filter((month) => monthlyTotals[month]) // only include months with data
+        .map((month) => ({
+            month,
+            total: monthlyTotals[month],
+        }));
+};
+
+const getSpendingByCategory = (subscriptions) => {
+    const categoryTotals = {};
+
+    subscriptions.forEach((sub) => {
+        const category = sub.category || "Uncategorized";
+        const price = parseFloat(sub.price) || 0;
+        categoryTotals[category] = (categoryTotals[category] || 0) + price;
+    });
+
+    return Object.entries(categoryTotals).map(([category, total]) => ({
+        category,
+        total,
+    }));
 };
 
 export default function Dashboard() {
-    const [subscriptions, setSubscriptions] = useState([]);
+    const { subscriptions, isLoaded } = useSubscriptions();
+    const monthlySpending = getMonthlySpending(subscriptions);
+    const spendingByCategory = getSpendingByCategory(subscriptions);
 
-    useEffect(() => {
-        setSubscriptions([
-            { name: "Netflix", amount: 12.99, renewDate: "2025-08-01" },
-            { name: "Spotify", amount: 9.99, renewDate: "2025-07-03" },
-            { name: "Figma Pro", amount: 15, renewDate: "2025-08-05" },
-        ]);
-    }, []);
+    if (!isLoaded) {
+        return (
+            <ClipLoader />
+        );
+    }
 
-    const total = subscriptions.reduce((sum, sub) => sum + sub.amount, 0);
+    const total = subscriptions.reduce((sum, sub) => {
+        const price = parseFloat(sub.price);
+        return sum + (isNaN(price) ? 0 : price);
+    }, 0);
+
+    const upcoming = subscriptions.filter(sub => new Date(sub.renewDate) > new Date());
+    const missed = subscriptions.filter(sub => new Date(sub.renewDate) < new Date());
 
     return (
         <div className="px-4 md:px-12 lg:px-24 py-6">
             <h1 className="text-2xl font-semibold text-slate-800 mb-6">Dashboard</h1>
 
+            {/* STAT CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
                 <div className="bg-teal-50 p-4 rounded-xl shadow text-center">
                     <p className="text-sm text-teal-600">Total Monthly Spend</p>
-                    <h2 className="text-2xl font-bold text-teal-700">${total.toFixed(2)}</h2>
+                    <h2 className="text-2xl font-bold text-teal-700">₦{total.toLocaleString()}</h2>
                 </div>
                 <div className="bg-sky-50 p-4 rounded-xl shadow text-center">
                     <p className="text-sm text-sky-600">Active Subscriptions</p>
@@ -73,39 +108,26 @@ export default function Dashboard() {
                 </div>
                 <div className="bg-yellow-50 p-4 rounded-xl shadow text-center">
                     <p className="text-sm text-yellow-600">Upcoming Renewals</p>
-                    <h2 className="text-2xl font-bold text-yellow-700">
-                        {
-                            subscriptions.filter(sub => new Date(sub.renewDate) > new Date()).length
-                        }
-                    </h2>
+                    <h2 className="text-2xl font-bold text-yellow-700">{upcoming.length}</h2>
                 </div>
                 <div className="bg-rose-50 p-4 rounded-xl shadow text-center">
                     <p className="text-sm text-rose-600">Missed Renewals</p>
-                    <h2 className="text-2xl font-bold text-rose-600">
-                        {
-                            subscriptions.filter(sub => new Date(sub.renewDate) < new Date()).length
-                        }
-                    </h2>
+                    <h2 className="text-2xl font-bold text-rose-600">{missed.length}</h2>
                 </div>
             </div>
 
+            {/* UPCOMING RENEWALS */}
             <div className="bg-white p-6 rounded-xl shadow mb-8">
-                <h3 className="text-lg font-semibold mb-4 text-slate-800">
-                    Upcoming Renewals
-                </h3>
+                <h3 className="text-lg font-semibold mb-4 text-slate-800">Upcoming Renewals</h3>
 
                 <ul className="divide-y">
-                    {subscriptions
-                        .filter(sub => new Date(sub.renewDate) > new Date())
+                    {upcoming
                         .sort((a, b) => new Date(a.renewDate) - new Date(b.renewDate))
                         .slice(0, 3)
                         .map((sub, idx) => {
                             const daysLeft = getDaysLeft(sub.renewDate);
                             return (
-                                <li
-                                    key={idx}
-                                    className="py-3 flex justify-between text-slate-700 items-center"
-                                >
+                                <li key={idx} className="py-3 flex justify-between text-slate-700 items-center">
                                     <div>
                                         <p className="font-medium">{sub.name}</p>
                                         <p className={`text-sm ${getCountdownColor(daysLeft)}`}>
@@ -120,7 +142,7 @@ export default function Dashboard() {
                         })}
                 </ul>
 
-                {subscriptions.filter(sub => new Date(sub.renewDate) > new Date()).length > 3 && (
+                {upcoming.length > 3 && (
                     <div className="mt-4 text-right">
                         <Link
                             to="/subscriptions"
@@ -132,6 +154,7 @@ export default function Dashboard() {
                 )}
             </div>
 
+            {/* CHARTS */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div className="bg-gradient-to-br from-teal-50 to-white p-6 rounded-xl shadow">
                     <h3 className="text-lg font-semibold mb-4 text-slate-800">Spending Breakdown</h3>
@@ -139,9 +162,9 @@ export default function Dashboard() {
                         <ResponsiveContainer>
                             <PieChart>
                                 <Pie
-                                    data={subscriptions}
-                                    dataKey="amount"
-                                    nameKey="name"
+                                    data={spendingByCategory}
+                                    dataKey="total"
+                                    nameKey="category"
                                     cx="50%"
                                     cy="50%"
                                     outerRadius={80}

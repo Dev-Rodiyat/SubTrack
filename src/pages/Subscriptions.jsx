@@ -71,6 +71,32 @@ export default function Subscriptions() {
             });
     };
 
+    const exportToCSV = () => {
+        if (filtered.length === 0) {
+            alert("No subscriptions to export.");
+            return;
+        }
+
+        const headers = ["Name", "Price", "Category", "Status", "Renew Date"];
+        const rows = filtered.map(sub => [
+            sub.name,
+            `₦${parseFloat(sub.price).toLocaleString()}`,
+            sub.category || "N/A",
+            sub.status,
+            dayjs(sub.renewDate).format("YYYY-MM-DD")
+        ]);
+
+        const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `subscriptions-${dayjs().format("YYYY-MM-DD")}.csv`);
+        link.click();
+    };
+
     const filtered = applyFilters();
 
     return (
@@ -104,17 +130,17 @@ export default function Subscriptions() {
                         )}
                     </div>
 
-                    {/* Export */}
-                    <button className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700">
+                    <button
+                        onClick={exportToCSV}
+                        className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700"
+                    >
                         <Download className="w-4 h-4" />
                         Export
                     </button>
                 </div>
             </div>
 
-            {/* Filters */}
             <div className="flex flex-wrap items-center gap-4 mb-6">
-                {/* Status */}
                 <select
                     value={statusFilter}
                     onChange={e => setStatusFilter(e.target.value)}
@@ -150,8 +176,8 @@ export default function Subscriptions() {
                 <button
                     onClick={() => setView("list")}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md border ${view === "list"
-                            ? "bg-teal-600 text-white border-teal-600"
-                            : "bg-white text-slate-700 hover:bg-slate-100"
+                        ? "bg-teal-600 text-white border-teal-600"
+                        : "bg-white text-slate-700 hover:bg-slate-100"
                         }`}
                 >
                     <List className="w-4 h-4" />
@@ -160,8 +186,8 @@ export default function Subscriptions() {
                 <button
                     onClick={() => setView("grid")}
                     className={`flex items-center gap-2 px-4 py-2 rounded-md border ${view === "grid"
-                            ? "bg-teal-600 text-white border-teal-600"
-                            : "bg-white text-slate-700 hover:bg-slate-100"
+                        ? "bg-teal-600 text-white border-teal-600"
+                        : "bg-white text-slate-700 hover:bg-slate-100"
                         }`}
                 >
                     <Grid3X3 className="w-4 h-4" />
