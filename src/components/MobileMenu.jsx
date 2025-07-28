@@ -1,7 +1,7 @@
 import { FiX } from "react-icons/fi";
 import { Link, useLocation } from "react-router-dom";
 
-export default function MobileMenu({ onClose, navLinks }) {
+export default function MobileMenu({ onClose, navLinks }) { 
   const location = useLocation();
 
   return (
