@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import MobileMenu from "./MobileMenu";
-import LOGO from './../assets/Subtrack.png'
+import LOGO from './../assets/SubTrack.png'
 import { Link, useLocation } from "react-router-dom";
 
 export default function Header() {
