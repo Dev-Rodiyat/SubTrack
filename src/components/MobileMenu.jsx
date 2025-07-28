@@ -1,4 +1,4 @@
-import { FiX } from "react-icons/fi";
+import { X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function MobileMenu({ onClose, navLinks }) { 
@@ -10,7 +10,7 @@ export default function MobileMenu({ onClose, navLinks }) {
         <div className="flex justify-between items-center mb-6">
           <span className="text-xl font-semibold text-gray-900">Menu</span>
           <button onClick={onClose}>
-            <FiX size={24} className="text-gray-700" />
+            <X size={24} className="text-gray-700" />
           </button>
         </div>
         <nav className="flex flex-col gap-4">
